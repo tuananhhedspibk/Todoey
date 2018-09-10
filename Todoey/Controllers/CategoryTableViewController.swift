@@ -22,6 +22,7 @@ class CategoryTableViewController: SwipeTableViewController {
         loadCategories()
         
         tableView.rowHeight = 80.0
+        tableView.separatorStyle = .none
     }
     
     //MARK: - Add New Categories
@@ -60,10 +61,18 @@ class CategoryTableViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-
-        cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No Categories Added Yet"
         
-        cell.backgroundColor = UIColor(hexString: categoryArray?[indexPath.row].hexColor ?? "#000000")
+        if let category = categoryArray?[indexPath.row] {
+            
+            guard let categoryColour = UIColor(hexString: category.hexColor) else {
+                fatalError()
+            }
+            
+            cell.backgroundColor = categoryColour
+    
+            cell.textLabel?.text = category.name
+            cell.textLabel?.textColor = ContrastColorOf(categoryColour, returnFlat: true)
+        }
 
         return cell
     }
